@@ -1,0 +1,70 @@
+
+/* styles.css */
+.app-container {
+  background-image: url('/Users/mariannamunarriz/Desktop/vite/app/public/imagenes/vector-realista-cables-aislados-cables-png-cables-png-entrelazados-cable-comunicacion-red_156846-1566.avif');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  
+}
+/* styles.css */
+.app-container::before {
+  content: "";
+  background-color: rgba(55, 53, 53, 0.5); 
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+ 
+}
+
+
+
+body {
+  background-image: url('/Users/mariannamunarriz/Desktop/vite/app/public/imagenes/vector-realista-cables-aislados-cables-png-cables-png-entrelazados-cable-comunicacion-red_156846-1566.avif');
+  color: #212529;
+  font-family: Arial, sans-serif;
+  font-size: 1rem;
+}
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+/* Estilos para la vista de detalle */
+.item-detail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.item-detail img {
+  max-width: 50%;
+  height: auto;
+}
+
+.item-detail h1 {
+  font-size: 24px;
+  margin: 10px 0;
+}
+
+.item-detail p {
+  font-size: 19px;
+  margin: 5px 0;
+}
+/* Estilo para agrandar productos al pasar el mouse */
+.card:hover {
+  transform: scale(1.07);
+  transition: transform 0.3s ease-in-out;
+}
+
+.product-card {
+  height: 650px; 
+}
+
+
+
