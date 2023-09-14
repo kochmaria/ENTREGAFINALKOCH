@@ -10,21 +10,21 @@ function Navbar() {
     <Navcontainer className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container">
         <h2>
-          <Link to="/">Tienda de Auriculares</Link>
+          <Link to="/catalogo">Tienda de Auriculares</Link>
         </h2>
         <ul className="navbar-nav">
           <li className="nav-item">
-            <NavLink className="nav-link" activeClassName="active" to="/categoryId/Inalambricos">
+            <NavLink className="nav-link" activeClassName="active" to="/category/Inalambricos">
               Inalámbricos
             </NavLink>
           </li>
           <li className="nav-item">
-            <NavLink className="nav-link" activeClassName="active" to="/categoryId/Gamers">
+            <NavLink className="nav-link" activeClassName="active" to="/category/Gamers">
               Gamers
             </NavLink>
           </li>
           <li className="nav-item">
-            <NavLink className="nav-link" activeClassName="active" to="/categoryId/Runners">
+            <NavLink className="nav-link" activeClassName="active" to="/category/Runners">
               Runners
             </NavLink>
           </li>
@@ -38,6 +38,7 @@ function Navbar() {
     </Navcontainer>
   );
 }
+
 
 
 

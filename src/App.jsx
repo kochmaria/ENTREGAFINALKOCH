@@ -6,6 +6,9 @@ import Navbar from "./components/Navbar";
 import "./App.css";
 import Checkout from "./components/Checkout";
 
+
+
+
 function App() {
   
 
@@ -14,7 +17,9 @@ function App() {
       <Navbar  />
       <h1></h1>
       <Routes>
-        <Route path="/" element={<ItemListContainer />} />
+        <Route path="/catalogo" element={<ItemListContainer />} />
+
+        
         <Route path="/category/:categoryId" element={<ItemListContainer />} />
         <Route path="/item/:id" element={<ItemDetailContainer />} />
       </Routes>

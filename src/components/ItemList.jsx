@@ -1,20 +1,25 @@
-import  { useState, useEffect } from "react";
-import { collection, getDocs, getFirestore } from "firebase/firestore";
+import { useState, useEffect } from "react";
+import { collection, getDocs, getFirestore, query, where } from "firebase/firestore";
 import PropTypes from "prop-types";
 import { Carousel } from "react-bootstrap";
 
-const ItemList = () => {
+const ItemList = ({ categoryId }) => {
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const db = getFirestore();
-    const itemCollection = collection(db, "items");
+    const fetchItems = async () => {
+      const db = getFirestore();
+      const itemCollection = collection(db, "items");
 
-    setIsLoading(true);
+      
+      const q = query(itemCollection, where("categoryId", "==", categoryId));
 
-    getDocs(itemCollection)
-      .then((snapshot) => {
+      setIsLoading(true);
+
+      try {
+        const snapshot = await getDocs(q);
+
         const itemsFromSnapshot = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
@@ -22,12 +27,14 @@ const ItemList = () => {
 
         setItems(itemsFromSnapshot);
         setIsLoading(false);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Error fetching items: ", error);
         setIsLoading(false);
-      });
-  }, []);
+      }
+    };
+
+    fetchItems();
+  }, [categoryId]);
 
   return (
     <div className="container">
@@ -38,11 +45,7 @@ const ItemList = () => {
           <div key={item.id} className="col-md-4 mb-4" style={{ overflow: "hidden", height: "450px" }}>
             <Carousel interval={9000} style={{ backgroundColor: "grey", color: "white", height: "120%" }}>
               <Carousel.Item style={{ minHeight: "400px" }}>
-                <img
-                  src={item.Image}
-                  alt={item.title}
-                  className="d-block w-100"
-                />
+                <img src={item.Image} alt={item.title} className="d-block w-100" />
                 <Carousel.Caption style={{ textAlign: "center" }}>
                   <h2 style={{ fontSize: "24px", color: "white" }}>{item.title}</h2>
                   <p style={{ fontSize: "20px", color: "white" }}>Precio: ${item.price}</p>
@@ -61,7 +64,8 @@ const ItemList = () => {
 };
 
 ItemList.propTypes = {
-  items: PropTypes.array.isRequired,
+  categoryId: PropTypes.string.isRequired, 
 };
 
 export default ItemList;
+
