@@ -5,15 +5,15 @@ import ItemDetailContainer from "./components/ItemDetailContainer";
 import Navbar from "./components/Navbar";
 import "./App.css";
 import Checkout from "./components/Checkout";
-
+import CartProvider from "./components/context/CartProvider";
 
 
 
 function App() {
   
-
+  
   return (
-    <div className="app-container">
+    <CartProvider>
       <Navbar  />
       <h1></h1>
       <Routes>
@@ -24,7 +24,8 @@ function App() {
         <Route path="/item/:id" element={<ItemDetailContainer />} />
       </Routes>
       <Checkout />
-    </div>
+    </CartProvider>
+    
   );
 }
 

@@ -1,17 +1,15 @@
+import { useContext } from 'react';
+import CartContext from './context/CartContext';
 
-import PropTypes from "prop-types";
+const CartWidget = () => {
+  const { cart } = useContext(CartContext);
 
-const CartWidget = ({ itemCount }) => {
+  // Calcula la cantidad total de productos en el carrito
+  const itemCount = cart.reduce((total, item) => total + item.quantity, 0);
+
   return (
-    <div className="cart-widget">
-      <i className="bi bi-cart-fill"></i>
-      <span className="cart-count">{itemCount}</span>
-    </div>
+    <div>CartWidget {itemCount}</div>
   );
-};
-
-CartWidget.propTypes = {
-  itemCount: PropTypes.number.isRequired,
 };
 
 export default CartWidget;

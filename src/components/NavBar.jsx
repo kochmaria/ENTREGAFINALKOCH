@@ -2,9 +2,6 @@ import styled from 'styled-components';
 import { Link, NavLink } from 'react-router-dom';
 import CartWidget from './CartWidget';
 
-
-
-
 function Navbar() {
   return (
     <Navcontainer className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -38,6 +35,9 @@ function Navbar() {
     </Navcontainer>
   );
 }
+
+
+
 
 
 

@@ -13,7 +13,13 @@ const ItemList = ({ categoryId }) => {
       const itemCollection = collection(db, "items");
 
       
-      const q = query(itemCollection, where("categoryId", "==", categoryId));
+      let q;
+
+       if (categoryId) {
+        q = query(itemCollection, where("categoryId", "==", categoryId));
+        } else {
+        q = itemCollection; // Cargar todos los productos si no hay categoría especificada
+        }
 
       setIsLoading(true);
 
@@ -42,14 +48,17 @@ const ItemList = ({ categoryId }) => {
       {isLoading && <p>Cargando...</p>}
       <div className="row">
         {items.map((item) => (
-          <div key={item.id} className="col-md-4 mb-4" style={{ overflow: "hidden", height: "450px" }}>
-            <Carousel interval={9000} style={{ backgroundColor: "grey", color: "white", height: "120%" }}>
-              <Carousel.Item style={{ minHeight: "400px" }}>
-                <img src={item.Image} alt={item.title} className="d-block w-100" />
-                <Carousel.Caption style={{ textAlign: "center" }}>
+          <div key={item.id} className="col-md-4 mb-4" style={{ overflow: "hidden", height: "399px" }}>
+            <Carousel interval={9000} style={{ backgroundColor: "grey", color: "black", height: "120%" }}>
+              <Carousel.Item style={{ minHeight: "100px" }}>
+              <img src={item.imageId} alt={item.title} className="d-block w-100"  />
+
+
+                <Carousel.Caption style={{ textAlign: "bottom" }}>
                   <h2 style={{ fontSize: "24px", color: "white" }}>{item.title}</h2>
                   <p style={{ fontSize: "20px", color: "white" }}>Precio: ${item.price}</p>
-                  <button className="btn btn-primary">Agregar al Carrito</button>
+                  
+                   
                 </Carousel.Caption>
               </Carousel.Item>
               <Carousel.Item>

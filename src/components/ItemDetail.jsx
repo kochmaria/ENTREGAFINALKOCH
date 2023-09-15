@@ -1,55 +1,32 @@
-import { useEffect, useState } from "react";
-import { doc, getDoc, getFirestore } from 'firebase/firestore' ;
-
-const ItemDetail = () => {
-
-    const [item, setItem] = useState (null);
-    const [isLoading, setIsLoading] = useState(false);
-
-    useEffect (() => {
-        const db = getFirestore()
-        
-        const itemRef = doc( db, "items", "U89do9KpluN50IoM5vfX");
-
-        setIsLoading(true)
-
-        getDoc(itemRef).then(snapshot => {
-            
-
-            setIsLoading(false);
-            if (snapshot.exists()) {
-                setItem({
-                    id: snapshot.id,
-                    ...snapshot.data(),
-                });
-            } 
-        });
-
-        //console.log("itemRef", itemRef);
-
-    }, [] );
-    
-//console.log("item" , item);
-
-    return (
-        <div>
-            <h2>Item Detail</h2>
-
-            {isLoading && <p>Cargando...</p>}
+import PropTypes from "prop-types";
 
 
-            {item && (
-                <div>
-                    <h3>Nombre: {item.title}</h3>
-                    <p>ID: {item.id}</p>
-                    
-                    <p>Descripcion :{item.description}</p>
-                    <p>Precio: ${item.price}</p>
-                    
-                </div>
-            )}
-        </div>
-    )
-}
+
+const ItemDetail = ({ item, isLoading, addItem }) => {
+  if (isLoading) {
+    return <h2>Loading...</h2>;
+  }
+
+  if (!item) {
+    return <h2>Product not found</h2>;
+  }
+
+  return (
+    <div>
+      <h1>{item.title}</h1>
+      <p>{item.description}</p>
+      <p>${item.price}</p>
+      <p>Stock: {item.stock}</p>
+      <p>Categoría: {item.categoryId}</p>
+      <button onClick={() => addItem(item, 1)}>Agregar al carrito</button>
+    </div>
+  );
+};
+
+ItemDetail.propTypes = {
+  item: PropTypes.object,
+  isLoading: PropTypes.bool,
+  addItem: PropTypes.func,
+};
 
 export default ItemDetail;
