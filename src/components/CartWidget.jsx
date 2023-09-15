@@ -1,15 +1,13 @@
-import { useContext } from 'react';
-import CartContext from './context/CartContext';
+import { useContext } from "react";
+import CartContext from "./context/CartContext";
+import { getCartQuantity } from "../utils";
 
 const CartWidget = () => {
   const { cart } = useContext(CartContext);
 
-  // Calcula la cantidad total de productos en el carrito
-  const itemCount = cart.reduce((total, item) => total + item.quantity, 0);
+  const quantity = getCartQuantity(cart);
 
-  return (
-    <div>CartWidget {itemCount}</div>
-  );
+  return <div>CartWidget {quantity > 0 ? quantity : ""}</div>;
 };
 
 export default CartWidget;
