@@ -3,7 +3,7 @@ import { doc, getDoc, getFirestore } from 'firebase/firestore';
 import { useParams } from 'react-router-dom';
 import ItemDetail from './ItemDetail';
 import CartContext from './context/CartContext';
-import firebaseApp from './firebaseConfig'; // Importa tu configuración de Firebase
+
 
 const ItemDetailContainer = () => {
   const [item, setItem] = useState(null);
@@ -13,7 +13,7 @@ const ItemDetailContainer = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const db = getFirestore(firebaseApp); // Utiliza tu instancia de Firebase configurada
+        const db = getFirestore(); // Utiliza tu instancia de Firebase configurada
 
         const productRef = doc(db, 'products', id); // 'products' es el nombre de tu colección en Firestore
 
