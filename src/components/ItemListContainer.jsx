@@ -12,8 +12,9 @@ const ItemListContainer = () => {
       const db = getFirestore();
       const itemCollection = collection(db, "items");
 
-      // Creamos una consulta (query) para filtrar los productos por la categoría
+      
       const q = query(itemCollection, where("categoryId", "==", categoryId));
+      
 
       try {
         const snapshot = await getDocs(q);

@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 import PropTypes from "prop-types";
 import { Carousel } from "react-bootstrap";
 
@@ -9,6 +11,7 @@ const ItemList = ({ items }) => {
       <div className="row">
         {items.map((item) => (
           <div key={item.id} className="col-md-4 mb-4" style={{ overflow: "hidden", height: "399px" }}>
+            <Link to={`/item/${item.id}`}> {/* Enlace al detalle del producto */}
             <Carousel interval={9000} style={{ backgroundColor: "grey", color: "black", height: "120%" }}>
               <Carousel.Item style={{ minHeight: "100px" }}>
               <img src={item.imageId} alt={item.title} className="d-block w-100"  />
@@ -25,6 +28,7 @@ const ItemList = ({ items }) => {
                 <p style={{ textAlign: "center", color: "white" }}>{item.description}</p>
               </Carousel.Item>
             </Carousel>
+            </Link>
           </div>
         ))}
       </div>
