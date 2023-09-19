@@ -1,42 +1,33 @@
 import { useState } from "react";
-import PropTypes from "prop-types"; // Importa PropTypes
+import PropTypes from "prop-types";
 import CartContext from "./CartContext";
 
 const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
 
-  const isInCart = (id) => {
-    const itemInCart = cart.find((item) => item.id === id);
-    return !!itemInCart;
-  };
-
   const addItem = (product, quantity) => {
-    const itemInCart = isInCart(product.id);
+    const updatedCart = [...cart];
+    const existingItemIndex = updatedCart.findIndex((item) => item.id === product.id);
 
-    if (itemInCart) {
-      const newCart = cart.map((item) => {
-        if (item.id === product.id) {
-          return {
-            ...item,
-            quantity: item.quantity + quantity,
-          };
-        }
-        return item;
-      });
-      setCart(newCart);
+    if (existingItemIndex !== -1) {
+      updatedCart[existingItemIndex].quantity += quantity;
     } else {
-      setCart([...cart, { ...product, quantity }]);
+      updatedCart.push({ ...product, quantity });
     }
+
+    setCart(updatedCart);
   };
 
   const removeItem = (id) => {
-    const newCart = cart.filter((item) => item.id !== id);
-    setCart(newCart);
+    const updatedCart = cart.filter((item) => item.id !== id);
+    setCart(updatedCart);
   };
 
   const clear = () => {
     setCart([]);
   };
+
+  const isInCart = (id) => cart.some((item) => item.id === id);
 
   return (
     <CartContext.Provider
@@ -47,11 +38,8 @@ const CartProvider = ({ children }) => {
   );
 };
 
-// Define el tipo de children
 CartProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
 export default CartProvider;
-
-

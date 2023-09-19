@@ -1,9 +1,8 @@
-import { useState, useEffect, useContext } from 'react';
+import  { useState, useEffect, useContext } from 'react';
 import { doc, getDoc, getFirestore } from 'firebase/firestore';
 import { useParams } from 'react-router-dom';
 import ItemDetail from './ItemDetail';
 import CartContext from './context/CartContext';
-
 
 const ItemDetailContainer = () => {
   const [item, setItem] = useState(null);
@@ -13,10 +12,8 @@ const ItemDetailContainer = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const db = getFirestore(); // Utiliza tu instancia de Firebase configurada
-
-        const productRef = doc(db, 'products', id); // 'products' es el nombre de tu colección en Firestore
-
+        const db = getFirestore();
+        const productRef = doc(db, 'items', id);
         const productSnapshot = await getDoc(productRef);
 
         if (productSnapshot.exists()) {
@@ -40,3 +37,4 @@ const ItemDetailContainer = () => {
 };
 
 export default ItemDetailContainer;
+

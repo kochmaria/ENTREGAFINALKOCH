@@ -1,2 +1,1 @@
-mi tienda nube
-# ENTREGAFINALKOCH
+e-commerce auriculares

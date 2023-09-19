@@ -1,118 +1,180 @@
-import { getFirestore, collection, addDoc , doc, updateDoc} from "firebase/firestore";
-import {useState} from "react";
+import { useContext, useState } from "react";
+import CartContext from "./context/CartContext";
+import { Link } from "react-router-dom";
+
+import { getCartTotal, mapCartToOrdersItems } from "./utils";
+
+
+
+
+import { serverTimestamp } from "firebase/firestore";
+import { createOrder } from "../services";
 
 const Checkout = () => {
-    const [orderId, setOrderId] = useState (null);
-     
-    const createOrder = () => {
-      const order = {
-        buyer: {
-          Nombre: "Pilar",
-          Numero: "12345678",
-          email: "kochpilar99@gmail.com"
-        },
-        items: [
-          {
-            id: "HP1Z9hRVzZOhvxXwIX2N",
-            title: "Headphones Bluetooth JBL",
-            price: 400
-          },
-          {
-            id: "R3oyBAamZOhsFVCbuV3w",
-            title: "HeadPhones Bluetooth Marshal",
-            price: 700
-          },
-          {
-            id: "U89do9KpluN50IoM5vfX",
-            title: "AirPods Pro",
-            price: 500
-          },
-          {
-            id: "jB4UBo5B6ShirA2fGXWU",
-            title: "Headphones Noga",
-            price: 350
-          },
-          {
-            id: "p6ifqb2YylSGpf27LJif",
-            title: "Marshal Inalambricos Black",
-            price: 600
-          },
-          {
-            id: "08",
-            title: "Energy Sistem Earphones Sport 2 True Wireless",
-            price: 150
-          },
-          {
-            id: "07",
-            title: "HUAWEII FreeBuds Pro 2",
-            price: 300
-          },
-          {
-            id: "05",
-            price:270,
-            title: "Auriculares Runner JBL",
-
-          },
-          {
-            id: "04",
-            title:"Headphones Smith",
-            price:500,
-
-          },
-          {
-            id:"03",
-            title: "Razer Barracuda X",
-            price: 500,
-
-          },
-          {
-            id: "02",
-            title: "Headphones Gamer Reddragon",
-
-            price: 200,
-          },
-        ],
-        total: 5850 // Asigna un valor a la propiedad total
-      };
+  const [orderId, setOrderId] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const { cart, clear } = useContext(CartContext);
   
-      const db = getFirestore();
-      const ordersCollection = collection(db, "orders");
-  
-      addDoc(ordersCollection, order)
-        .then((docRef) => {
-          console.log("Orden creada con ID: ", docRef.id);
-          setOrderId (docRef.id);
-        })
-        .catch((error) => {
-          console.error("Error al crear la orden:", error);
-        });
+  const total = getCartTotal(cart);
+
+  const handleCheckout = () => {
+    const order = {
+      buyer: {
+        name: "Pilar",
+        numero: "12345678",
+        email: "kochpilar99@gmail.com",
+      },
+      items: mapCartToOrdersItems(cart),
+      total: total,
+      date: serverTimestamp(),
     };
-  
-    const updateOrder = () => {
-        const db = getFirestore();
-        const orderDoc = doc(db, "orders", orderId);
-      
-        updateDoc(orderDoc, { total: 2000 })
-          .then(() => {
-            console.log("Orden Actualizada");
-            alert("Orden Actualizada");
-          })
-          .catch((error) => {
-            console.error("Error al actualizar la orden:", error);
-            alert("Error al actualizar la orden");
-          });
-      };
-      
-    return (
-      <div>
-         <h2>Checkout</h2>
-         <button className="btn btn-primary" onClick={createOrder}>Crear Orden</button>
-         {!! orderId && <p>Orden Creada con ID: {orderId} </p>}
-         {!!orderId && <button className="btn btn-primary" onClick={updateOrder}>Actualizar Orden</button>}
 
-       </div>
-    );
+    setIsLoading(true);
+
+    createOrder(order).then((docRef) => {
+      setOrderId(docRef.id);
+      setIsLoading (false);
+      clear ();
+    });
+  };
+   
+
+
+
+
+
+  // Estado para los datos del formulario
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
+  });
+
+  const [showConfirmation, setShowConfirmation] = useState(false);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+   
+    setShowConfirmation(true);
+  };
+
+  return (
+    <div>
+      <h1>Resumen de compra</h1>
+
+      {orderId && <p>El id de la orden es: {orderId}</p>}
+
+      {!orderId && (
+        <>
+          <h3>Productos</h3>
+          <ul>
+            {cart.map((item) => (
+              <li key={item.id}>
+                <p>{item.title}</p>
+                <p>Cantidad: {item.quantity}</p>
+                <p>Precio por unidad: ${item.price}</p>
+                <p>Subtotal: ${item.price * item.quantity}</p>
+              </li>
+            ))}
+          </ul>
+          <p>Total de la compra: ${total}</p>
+          <Link to="/checkout">
+            <button onClick={handleCheckout} className="btn btn-primary">
+              Finalizar Compra
+            </button>
+            {isLoading && <p>Procesando compra...</p>}
+          </Link>
+        </>
+      )}
+      <div>
+        <h2>Formulario de contacto</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label htmlFor="firstName" className="form-label">
+              Nombre:
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="firstName"
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="lastName" className="form-label">
+              Apellido:
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="lastName"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="email" className="form-label">
+              Correo Electrónico:
+            </label>
+            <input
+              type="email"
+              className="form-control"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="phoneNumber" className="form-label">
+              Número de Teléfono:
+            </label>
+            <input
+              type="tel"
+              className="form-control"
+              id="phoneNumber"
+              name="phoneNumber"
+              value={formData.phoneNumber}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          {/* Mensaje de confirmación */}
+          {showConfirmation && (
+            <div className="alert alert-success mt-3">
+              Tus datos se han guardado correctamente!
+            </div>
+          )}
+          {/* Botón de Guardar */}
+          {!showConfirmation && (
+            <div className="mt-3">
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => setShowConfirmation(true)}
+              >
+                Guardar
+              </button>
+            </div>
+          )}
+        </form>
+      </div>
+    </div>
+  );
 };
-  
+
 export default Checkout;
-  
+

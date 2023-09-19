@@ -15,15 +15,17 @@ function App() {
   return (
     <CartProvider>
       <Navbar  />
-      <h1></h1>
+      
       <Routes>
         <Route path="/catalogo" element={<ItemListContainer />} />
 
         
         <Route path="/category/:categoryId" element={<ItemListContainer />} />
         <Route path="/item/:id" element={<ItemDetailContainer />} />
+        <Route path="/Checkout" element={<Checkout/>}/>
       </Routes>
-      <Checkout />
+
+      
     </CartProvider>
     
   );
